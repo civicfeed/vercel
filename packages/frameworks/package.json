@@ -1,9 +1,11 @@
 {
   "name": "@vercel/frameworks",
   "version": "0.2.0",
-  "main": "frameworks.json",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "license": "UNLICENSED",
   "scripts": {
+    "build": "tsc",
     "test-unit": "jest --env node --verbose --runInBand --bail"
   },
   "devDependencies": {

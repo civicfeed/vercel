@@ -2,8 +2,7 @@ import Ajv from 'ajv';
 import { join } from 'path';
 import { existsSync } from 'fs';
 import { isString } from 'util';
-import { Framework } from '../';
-const frameworkList = require('../frameworks.json') as Framework[];
+import { frameworks } from '../';
 
 const SchemaFrameworkDetectionItem = {
   type: 'array',
@@ -131,7 +130,7 @@ describe('frameworks', () => {
     const root = join(__dirname, '..', '..', '..');
     const getExample = (name: string) => join(root, 'examples', name);
 
-    const result = frameworkList
+    const result = frameworks
       .map(f => f.slug)
       .filter(isString)
       .filter(f => existsSync(getExample(f)) === false);
@@ -141,7 +140,7 @@ describe('frameworks', () => {
 
   it('ensure schema', async () => {
     const ajv = new Ajv();
-    const result = ajv.validate(Schema, frameworkList);
+    const result = ajv.validate(Schema, frameworks);
 
     if (ajv.errors) {
       console.error(ajv.errors);
@@ -151,7 +150,7 @@ describe('frameworks', () => {
   });
 
   it('ensure logo', async () => {
-    const missing = frameworkList
+    const missing = frameworks
       .map(f => f.logo)
       .filter(url => {
         const prefix =
@@ -165,7 +164,7 @@ describe('frameworks', () => {
 
   it('ensure unique sort number', async () => {
     const sortNumToSlug = new Map<number, string | null>();
-    frameworkList.forEach(f => {
+    frameworks.forEach(f => {
       if (f.sort) {
         const duplicateSlug = sortNumToSlug.get(f.sort);
         expect(duplicateSlug).toStrictEqual(undefined);
